@@ -35,5 +35,4 @@ COVID Tracker is a tool that allows informing the public about the COVID-19 issu
 
 ## DataBase
 + Execute SQL in directory `scripts`:
-	+  `covid_tracker_dump.sql` or 
-	+ `covid_tracker_dump_data.sql` 
+	+  `covid_tracker_dump.sql`
