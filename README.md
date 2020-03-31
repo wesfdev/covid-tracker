@@ -11,7 +11,7 @@ COVID Tracker is a tool that allows informing the public about the COVID-19 issu
 + [Node JS](https://nodejs.org/es/docs/)
 + [Axios](https://github.com/axios/axios#axios)
 + [Express](https://expressjs.com/es/)
-+ [Maps JavaScript API](https://developers.google.com/maps/documentation/javascript/tutorial)
++ [Google Maps API](https://developers.google.com/maps/documentation/javascript/tutorial)
 + [IDE (VSCode)](https://code.visualstudio.com/docs)
 + [Angular](https://angular.io/)
 
