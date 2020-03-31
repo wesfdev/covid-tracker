@@ -1,0 +1,94 @@
+
+    <section id="registers" class="registers section-bg">
+      <div class="container"><br>
+        <h4><a href="#" style="padding-left: 10px;">Casos Covid-19:</a></h4>
+        <span href="#" style="padding-left: 10px;">Ultima actualización: {{statistics.time | date:'dd/MM/yyyy h:mm:ss a'}}</span>
+        <form class="form-inline" novalidate>
+          <div class="form-group mx-sm-3 mb-2">
+            <input  
+            class="form-control form-control-sm" 
+            type="text" 
+            placeholder="Ingrese nombre pais"
+            onClick="this.select();"
+            [(ngModel)]="country"
+            [ngModelOptions]="{standalone: true}">
+          </div>
+
+          <button type="submit" class="btn btn-light" (click)="search(); history()">
+            <i class='bx bx-search'></i>
+          </button>
+
+        </form>
+
+        <div class="row no-gutters clients-wrap clearfix wow fadeInUp">
+          <div class="col-lg-2 col-md-4 col-6">
+            <div class="reg-logo">
+              <img src="assets/images/total.svg"  data-aos="fade-right">
+              <span data-aos="fade-right" class="reg-icon"><strong>Total:</strong></span>
+              <span data-aos="fade-right" class="reg-icon"> {{statistics.cases.total | number}}</span>              
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-4 col-6">
+            <div class="reg-logo">
+              <img src="assets/images/new.svg"  data-aos="fade-left" data-aos-delay="300">
+              <span data-aos="fade-right" class="reg-icon"> <strong>Nuevos:</strong>  </span>
+              <span data-aos="fade-right" class="reg-icon"> {{statistics.cases.new | number}}</span>                            
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-4 col-6">
+            <div class="reg-logo">
+              <img src="assets/images/recovered.svg" data-aos="fade-left" data-aos-delay="100">
+              <span data-aos="fade-right" style="padding-left : 2px"><strong>Recuperados:</strong></span>
+              <span data-aos="fade-right" class="reg-icon"> {{statistics.cases.recovered | number}}</span>                            
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-4 col-6">
+            <div class="reg-logo">
+              <img src="assets/images/actived.svg" data-aos="fade-right" data-aos-delay="200">
+              <span data-aos="fade-right" class="reg-icon"><strong>Activos:</strong></span>
+              <span data-aos="fade-right" class="reg-icon"> {{statistics.cases.active | number}}</span>                            
+            </div>
+          </div>
+
+
+          <div class="col-lg-2 col-md-4 col-6">
+            <div class="reg-logo">
+              <img src="assets/images/death2.svg"  data-aos="flip-right" data-aos-delay="350">
+              <span data-aos="fade-right" class="reg-icon"><strong>Fallecidos:</strong></span>
+              <span data-aos="fade-right" class="reg-icon"> {{statistics.deaths.total | number}}</span>                            
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+<div>
+  <table class="table table-striped">
+    <thead>
+      <tr style="font-size: 9px;">
+        <th scope="col">Fecha</th>
+        <th scope="col">Total</th>
+        <th scope="col">Nuevos</th>
+        <th scope="col">Recuperados</th>
+        <th scope="col">Activos</th>
+        <th scope="col">Fallecidos</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr style="font-size: 10px;" *ngFor="let h of historyList; let i = index">
+        <td>{{h.time | date:'dd/MM/yyyy h:mm:ss a'}}</td>
+        <td>{{h.cases.total | number }}</td>
+        <td>{{h.cases.new | number }}</td>
+        <td>{{h.cases.recovered | number }}</td>
+        <td>{{h.cases.active | number }}</td>
+        <td>{{h.deaths.total | number }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

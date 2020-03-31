@@ -1,0 +1,128 @@
+<br>
+<div class="container">
+  <h3><i class='bx bx-analyse'></i>  Covid Tracker Analytics</h3>
+</div>
+
+<div class="container-fluid">
+  <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="home-tab" data-toggle="tab" href="#statistics" role="tab" aria-controls="home" aria-selected="true"><i class='bx bx-stats' ></i> Estadisticas</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="profile-tab" data-toggle="tab" href="#mapView" role="tab" aria-controls="profile" aria-selected="false"><i class='bx bxs-map'></i> Mapa de casos</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="contact-tab" data-toggle="tab" href="#registers" role="tab" aria-controls="contact" aria-selected="false"><i class='bx bx-data' ></i> Registros</a>
+    </li>
+  </ul>
+  <div class="tab-content" id="myTabContent">
+
+    <div class="tab-pane fade show active" id="statistics" role="tabpanel" aria-labelledby="home-tab">
+      <div class="row">
+        <ngx-charts-pie-grid
+        [view]="view"
+        [scheme]="colorScheme"
+        [results]="singleByCityChar"
+        (select)="onSelect($event)">
+      </ngx-charts-pie-grid>  
+      
+      <ngx-charts-pie-chart
+        [view]="view"
+        [scheme]="colorScheme"
+        [results]="singleByCityChar"
+        [gradient]="gradient"
+        [legend]="showLegend"
+        [legendPosition]="legendPosition"
+        [labels]="showLabels"
+        [doughnut]="isDoughnut"
+        (select)="onSelect($event)"
+        (activate)="onActivate($event)"
+        (deactivate)="onDeactivate($event)"
+        >
+      </ngx-charts-pie-chart>
+      </div>
+    
+    </div>
+
+    <div class="tab-pane fade" id="mapView" role="tabpanel" aria-labelledby="profile-tab">
+      <div class="container">
+        <br>
+        <span><strong><i class='bx bxs-map-alt' ></i> Mapa con casos sospechoso</strong></span>
+        <div id="mapByCity" class="tabcontent" style="width: 100%; height:600px;"></div>
+      </div>
+  
+    </div>
+
+    <div class="tab-pane fade" id="registers" role="tabpanel" aria-labelledby="contact-tab">
+      <div class="container-fluid" #epltable>
+        <br>
+        <div class="col-sm-12">
+          <button (click)="exportToExcel('CasosUbicacionCovid19', 'unified')" class="btn btn-success">Exportar en excel</button> 
+         </div>        
+        <br>
+        <span><strong>Casos sospechosos por ubicación</strong></span>
+        <table class="table table-striped">
+          <thead>
+            <tr style="font-size: 9px;">
+              <th scope="col">#</th>
+              <th scope="col">Ciudad</th>
+              <th scope="col">Latitud</th>
+              <th scope="col">Longitud</th>
+              <th scope="col">Casos</th>
+            </tr>
+          </thead>
+      
+          <tbody class="tbody">
+            <tr style="font-size: 10px;" *ngFor="let h of diagnosticsByCity; let i = index">
+              <td>{{ i }}</td>
+              <td>{{h.cityName }}</td>
+              <td>{{h.latitude }}</td>
+              <td>{{h.longitude }}</td>
+              <td>{{h.cases }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="container-fluid" #epltabledetail>
+        <br>
+        <div class="col-sm-12">
+          <button (click)="exportToExcel('CasosDetalleCovid19', 'detail')" class="btn btn-success">Exportar en excel</button> 
+         </div>                
+        <br>
+        <span><strong>Detalle de casos sospechosos por paciente</strong></span>
+        <table class="table table-striped">
+          <thead>
+            <tr style="font-size: 9px;">
+              <th scope="col">#</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Edad</th>
+              <th scope="col">Género</th>
+              <th scope="col">Ciudad</th>
+              <th scope="col">Latitud</th>
+              <th scope="col">Longitud</th>
+              <th scope="col">Sospecha contagio (%)</th>
+              <th scope="col">Fecha</th>
+            </tr>
+          </thead>
+      
+          <tbody class="body-custom">
+            <tr style="font-size: 10px;" *ngFor="let h of diagnostics; let i = index">
+              <td>{{ i }}</td>
+              <td>{{h.name }}</td>
+              <td>{{h.age | number }}</td>
+              <td>{{h.genderDescription }}</td>
+              <td>{{h.cityName }}</td>
+              <td>{{h.latitude }}</td>
+              <td>{{h.longitude }}</td>
+              <td>{{h.weighing }}</td>
+              <td>{{h.creation_date | date:'dd/MM/yyyy h:mm:ss a'}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>    
+    </div>
+
+  </div>
+  
+</div>

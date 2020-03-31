@@ -1,0 +1,23 @@
+
+tbody {
+    display: block;
+    overflow: auto;
+    height: 300px;
+    width: 100%;
+  }
+  
+  thead tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  thead, tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  thead {
+    width: calc( 100% - 1em )
+  }

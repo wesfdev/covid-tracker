@@ -1,0 +1,276 @@
+    <section id="symptom" class="resource section-bg">
+      <div class="container">
+        <div class="row">
+          <div class="image-symptom col-xl-5 d-flex align-items-stretch justify-content-center justify-content-lg-start"></div>
+          <div class="col-xl-7 pl-0 pl-lg-5 pr-lg-1 d-flex align-items-stretch">
+            <div class="content d-flex flex-column justify-content-center">
+              <h3 data-aos="fade-in" data-aos-delay="100">Seguimiento de síntomas</h3>
+              <p data-aos="fade-in">
+                  Si usted sospecha ser un paciente de COVID-19 positivo por algun sintoma o conoce a alguien, este sistema
+                  le permitira llevar un historico de su enfermedad y saber su estado actual, en donde se le pondra
+                  en contacto con un médico. 
+              </p>
+              <div class="row">
+                <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="100" >
+                  <i class="bx bx-images" (click)="openDiagnostic()"></i>
+                  <h4 (click)="openDiagnostic()"><a >Iniciar diagnotico</a></h4>
+                  <p></p>
+                </div>
+                <!--div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="150">
+                  <i class="bx bx-shield"></i>
+                  <h4><a>Contactar medico</a></h4>
+                  <p></p>
+                </div-->
+                <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="150" >
+                  <i class="bx bx-images"></i>
+                  <h4><a>Infórmate</a></h4>
+                  <br>
+                </div>
+
+
+                <div><!--  *ngIf="showPDF" -->
+                  <form class="form-inline" *ngFor="let pdf of listPDF">
+                    <button type="submit" class="btn" (click)="setPDF(pdf,'download')"><i class='bx bxs-cloud-download' ></i></button>
+                    <button type="submit" class="btn" (click)="setPDF(pdf,'view')"><i class='bx bx-show-alt' ></i></button>
+                    <label>{{pdf.name}}</label>                    
+                  </form>            
+                </div>
+
+                <div>
+                  <br>
+                  <span><strong>Ya que viste el video y leiste los archivos, te gutaría hacer un pequeño test sobre el coronavirus?  &nbsp; </strong></span>
+                    <a style="font-size: 30px;" href="https://www.unicef.org/es/coronavirus/datos-o-ficcion-cuanto-sabes-acerca-de-coronavirus-covid-19" target="_blank">
+                      <i class='bx bxs-pencil'> </i>
+                    </a>
+                </div>                
+
+                <div class="video">
+                  <video controls (click)="toggleVideo()" #videoPlayer style="width:420px;height:315px;">
+                      <source src="{{videoSource}}" type="video/mp4" />
+                      Browser not supported
+                  </video>
+                </div>
+
+
+
+                  <div *ngIf="viewFile">
+                      <pdf-viewer [src]="pdfSrc" 
+                      [render-text]="true"
+                      style="display: block;"
+                      [original-size]="false">
+                    </pdf-viewer>                    
+                  </div>
+                
+              </div>
+            </div>
+            
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+
+    <div class="modal fade" id="diagnosis" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Rastreador de síntomas</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <div class="container">
+              <div id="stepper1" class="bs-stepper">
+
+                <div class="bs-stepper-header">
+                  <div id ="one" class="step" data-target="#test-l-1">
+                    <button class="step-trigger">
+                      <span class="bs-stepper-circle">1</span>
+                      <span class="bs-stepper-label">Datos personales</span>
+                    </button>
+                  </div>
+                  <div class="line"></div>
+                  <div class="step" data-target="#test-l-2">
+                    <button class="step-trigger">
+                      <span class="bs-stepper-circle">2</span>
+                      <span class="bs-stepper-label">Condición</span>
+                    </button>
+                  </div>
+                  <div class="line"></div>
+                  <div class="step" data-target="#test-l-3">
+                    <button class="step-trigger">
+                      <span class="bs-stepper-circle">3</span>
+                      <span class="bs-stepper-label">Síntomas</span>
+                    </button>
+                  </div>
+
+
+                  <div class="step" data-target="#test-l-4">
+                    <button class="step-trigger">
+                    </button>
+                  </div>                  
+
+                </div>
+
+                <div class="bs-stepper-content">
+                  <form [formGroup]="formSymptoms" novalidate> 
+                    <div id="test-l-1" class="content">
+                        <div class="row">
+                          <div class="col">
+                            <input type="text" formControlName="name" class="form-control form-control-sm" placeholder="Ingrese su nombre">
+                          </div>
+                          <div class="col">
+                            <input type="number" formControlName="age" class="form-control form-control-sm" placeholder="Ingrese su edad">
+                          </div>         
+                        </div>
+                        <br>
+                        <div class="row">
+                          <div class="col">
+                            <ng-select [items]="listCities"
+                              bindLabel="name"
+                              placeholder="Donde estas ubicado? (municipio)"
+                              autofocus
+                              bindValue="dbid"
+                              formControlName="city">
+                            </ng-select>
+                          </div>                            
+                        </div>
+                        <br>
+                        <div class="row">
+                          <div class="btn-group btn-group-sm col" role="group" aria-label="gender">
+                           <span *ngFor="let g of listGender; let i = index" (click)="selectedRow = i" >
+                            <button type="button" class="btn btn-outline-info" [class.selected]="i == selectedRow" (click)="setValue('gender', g)">{{g.description}}</button>
+                           </span>
+                          </div>                     
+                        </div>
+              
+                        <br>
+                        <div class="row">
+                          <div class="col" style="font-size: 13px;">
+                            <span *ngFor="let tj of listTypeJob; let i = index" >
+                              <label class="cont">{{tj.description}}
+                                <input type="radio" name="typeJob" formControlName="typeJob" [value]="tj">
+                                <span class="checkmark"></span>
+                              </label>                              
+                            </span>
+                          </div>
+                        </div>  
+              
+                        <br>
+                        <span style="font-size: 12px;"><strong>¿Cuánto contacto hay en su trabajo?</strong></span>    
+                        <br><br>          
+                        <div class="row">
+                          <span *ngFor="let tc of listTypeContact; let i = index" >
+              
+                            <label class="cont">{{tc.description}}
+                              <input type="radio" name="typeContact" formControlName="typeContact" [value]="tc">
+                              <span class="checkmark"></span>
+                            </label>                              
+              
+                          </span>
+                        </div>  
+              
+                      <button (click)="next()" class="btn btn-sm btn-primary">Siguiente</button>
+                    </div>
+              
+              
+                    <div id="test-l-2" class="content">
+                      <span style="font-size: 12px;"><strong>¿Estas en un area de riesgo?</strong></span>    
+                      <div class="row">
+                        <div class="btn-group btn-group-sm col" role="group" >
+                          <button type="button" class="btn btn-outline-info" (click)="setValue('riskArea', 1); selectedRowRisk = 1" [class.selected]="1 == selectedRowRisk">SI</button>
+                          <button type="button" class="btn btn-outline-info" (click)="setValue('riskArea', 0); selectedRowRisk = 2" [class.selected]="2 == selectedRowRisk">NO</button>
+                        </div>                     
+                      </div>               
+              
+                      <span style="font-size: 12px;"><strong>¿Tuvo contacto con una persona que dio positivo por COVID-19?</strong></span>    
+                      <div class="row">
+                        <div class="btn-group btn-group-sm col" role="group" >
+                          <button type="button" class="btn btn-outline-info" (click)="setValue('typeContactWork', 1); selectedRowContact = 1" [class.selected]="1 == selectedRowContact">SI</button>
+                          <button type="button" class="btn btn-outline-info" (click)="setValue('typeContactWork', 0); selectedRowContact = 2" [class.selected]="2 == selectedRowContact">NO</button>
+                        </div>                     
+                      </div>                                     
+                      <br>
+                      <button (click)="next()" class="btn btn-sm btn-primary">Siguiente</button>
+                    </div>
+              
+              
+                    <div id="test-l-3" class="content">
+                      
+                      <div  *ngFor="let cat of listSymptoms | keyvalue">
+                        <!-- TIPO (enfermedad, sintoma, etc)-->
+                        <br><br>
+                        {{cat.key}} 
+                        <br>
+                        <span *ngFor="let symptom of cat.value | keyvalue">
+                          <!-- Tipo de enfermedad o sintoma-->
+                          <span style="font-size: 12px; "><strong>¿{{symptom.key}}? </strong></span>
+                        <div class="row">
+                          <select class="form-control" (ngModelChange)="addSymptom($event)" formControlName="lastSymptom">
+                            <!-- Detalle de enfermedades o sintomas -->
+                            <option *ngFor="let item of symptom.value" [value]="setObj(item)">{{item.responseDescription}}</option>
+                          </select>                          
+                          
+                        </div> 
+                      </span>                       
+                      </div>
+                      
+              
+                      <button type="button" class="btn btn-sm btn-primary mt-5" (click)="onSubmit()">Enviar datos</button>
+                    </div>
+
+                    <div id="test-l-4" class="content">
+                      <span style="font-size: 12px;"><strong>Probabilidad de contagio: </strong>{{result.probability[0].weighing}}%</span> 
+                      <br>   
+                      <span style="font-size: 12px;"><strong>Resumen:</strong></span>
+                      <br>
+                      <div>
+                        <ul>
+                          <li *ngFor="let r of result.observationsSyntom">{{r.description}}</li>
+                        </ul>
+                      </div> 
+                      <br>
+                      <span style="font-size: 12px;"><strong>Observaciones:</strong></span>
+
+                      <br>
+                      <div>
+                        <ul>
+                          <li *ngFor="let r of result.observationsConditional">{{r.description}}</li>
+                        </ul>
+                      </div>  
+                      <br>
+                        <span style="font-size: 12px;"><strong>Recomendaciones:</strong></span>
+                      <br>
+                      <div>
+                        <ul>
+                          <li *ngFor="let r of result.observationsDisease">{{r.description}}</li>
+                        </ul>
+                      </div>                        
+
+                      <br>
+                      <span style="font-size: 12px;"><strong>Token de acceso: </strong>{{result.token}}</span>                                                   
+                    </div>
+
+                  </form>
+
+
+                </div>
+
+              </div>
+            </div>
+            
+            
+
+          </div>
+
+          <!--div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div-->
+        </div>
+      </div>
+    </div>
