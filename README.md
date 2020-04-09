@@ -5,7 +5,10 @@ The goal is to offer alternatives to some of the challenges posed by the coronav
 ## Application Features
 COVID Tracker is a tool that allows informing the public about the COVID-19 issue and taking precautions, as well as generating online diagnostics to calculate the probability of contagion of a person. It also allows analysis and statistics of the information collected for decision making.
 
-[View Demo Web Site](https://youtu.be/IxnsPOrmQqA)
+[View Video Demo](https://youtu.be/IxnsPOrmQqA)
+
+[View Web Site](http://www.covid-gt.com/covid-tracker-web/#/)
+
 
 ## Tools:
 + [JavaScript](https://developer.mozilla.org/es/docs/Learn/JavaScript/First_steps/Qu%C3%A9_es_JavaScript)
