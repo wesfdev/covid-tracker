@@ -17,10 +17,14 @@ import { HelpmeComponent } from './helpme/helpme.component';
 import { AboutComponent } from './about/about.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { AnalyticsComponent } from './analytics/analytics.component';
+import { ToastrModule } from 'ngx-toastr';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+
+
 
 const appRoutes: Routes = [
   { path: '', component: NavigationComponent, pathMatch: 'full', data: { title: 'tracker' } },
-  { path: 'analytics', component: AnalyticsComponent, data: { title: 'analytics' } }
+  //{ path: 'analytics', component: AnalyticsComponent, data: { title: 'analytics' } }
 ];
 
 @NgModule({
@@ -43,12 +47,13 @@ const appRoutes: Routes = [
     NgxChartsModule,
     BrowserAnimationsModule,
     PdfViewerModule,
+    ToastrModule.forRoot(),
     RouterModule.forRoot(
       appRoutes,
       { useHash: true } // <-- debugging purposes only
     )
   ],
-  providers: [],
+  providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

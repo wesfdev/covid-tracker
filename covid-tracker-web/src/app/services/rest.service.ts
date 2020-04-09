@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 
-const endpoint = 'http://localhost:3000';
+const endpoint = 'http://www.covid-gt.com:3000';
 const endpoint_covid = 'https://covid-193.p.rapidapi.com';
 const httpOptions = {
   headers: new HttpHeaders({

@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import Stepper from 'bs-stepper';
 import { RestService } from '../services/rest.service';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+
 declare var $: any;
 
 @Component({
@@ -11,7 +13,7 @@ declare var $: any;
 })
 export class SymptomComponent implements OnInit {
 
-  @ViewChild('videoPlayer') videoplayer: any;
+  //@ViewChild('videoPlayer') videoplayer: any;
 
   public stepper: Stepper;
   public listGender:any = [];
@@ -25,33 +27,35 @@ export class SymptomComponent implements OnInit {
   public symptomDetail:any = [];
   public setObj:any = JSON.stringify;
   public result:any = { probability: [{}]};
+  public type:any = null;
   public listPDF:any = [];
   public showPDF:boolean = false;
   public viewFile:boolean = false;
   public pdfSrc:any = null;
-  public videoSource:string;
+  public videoSource:string ='assets/videos/coronavirus.mp4';
 
   public formSymptoms: FormGroup;
 
-  constructor(public api: RestService, public fb: FormBuilder) { 
-    this.videoSource = 'assets/videos/coronavirus.mp4';
+  constructor(public api: RestService, public fb: FormBuilder, private toastr: ToastrService) { 
+    //this.videoSource = 'assets/videos/coronavirus.mp4';
     this.validateForm();
     this.getPDF();
+
   }
 
   toggleVideo(event: any) {
-    this.videoplayer.play();
-}
+    //this.videoplayer.play();
+  }
   public async validateForm() {
     this.formSymptoms = this.fb.group({
-      name: [null],
-      age:[null],
-      gender:[null],
-      typeJob:[null],
-      typeContact:[null],
-      riskArea:[null],      
-      typeContactWork:[null],
-      city:[null],
+      name: [null, Validators.required],
+      age:[null, Validators.required],
+      gender:[null, Validators.required],
+      typeJob:[null, Validators.required],
+      typeContact:[null, Validators.required],
+      riskArea:[null, Validators.required],      
+      typeContactWork:[null, Validators.required],
+      city:[null, Validators.required],
       lastSymptom:[null]
     });
   }
@@ -67,15 +71,16 @@ export class SymptomComponent implements OnInit {
   }
 
   setPDF(pdf, type){
+    console.log(window.location)
     if(type == 'view'){
       this.pdfSrc = pdf.description;      
       this.viewFile = false;
       this.viewFile = true;
-     //$('#pdfModal').modal();
+     $('#modalPDF').modal();
     }else{
-      this.viewFile = false;
-      this.downloadURI(pdf.description);
-      this.pdfSrc = null;
+      //this.viewFile = false;
+      this.downloadURI(pdf);
+      //this.pdfSrc = null;
     }
   }
 
@@ -89,26 +94,39 @@ export class SymptomComponent implements OnInit {
 
   async onSubmit() {
 
-    let body:any = {};
-    body.diagnostic = this.formSymptoms.value;
-    body.detail = this.symptomDetail;
+    if(this.formSymptoms.invalid){
+      this.toastr.info('Por favor, complete todos los campos de la sección 1 y 2!', 'Formulario incompleto');    
+    }else{
 
-    let request = await this.api.posthttp('/v1/resources/diagnostic', body).toPromise();
-    console.log(request);
-    this.result = request.body;
-    this.next();
+      let body:any = {};
+      body.diagnostic = this.formSymptoms.value;
+      body.detail = this.symptomDetail;      
+      let request = await this.api.posthttp('/v1/resources/diagnostic', body).toPromise();
+
+      this.result = request.body;
+      this.type = this.result.type;
+      this.next();
+    }
+
+
 
   }
 
+  getString(value){
+    return String(value).substring(2);
+  }
 
   openDiagnostic(){
     //this.getStepper();
     this.selectedRow = null;
     this.selectedRowContact = null;
     this.selectedRowRisk = null;
+    this.type = null;
     this.formSymptoms.reset();
+    this.result = { probability: [{}]};    
     this.loadConfigurations();
     $('#diagnosis').modal();
+    this.stepper.to(1);
   }
 
   ngOnInit() {
@@ -123,6 +141,7 @@ export class SymptomComponent implements OnInit {
   }
 
   addSymptom(value){
+
     if(value){
       let item =JSON.parse(value);
       let foundIndex = this.symptomDetail.findIndex(x => x.symptom == item.symptom);

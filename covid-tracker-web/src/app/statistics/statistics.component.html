@@ -3,12 +3,14 @@
       <div class="container"><br>
         <h4><a href="#" style="padding-left: 10px;">Casos Covid-19:</a></h4>
         <span href="#" style="padding-left: 10px;">Ultima actualización: {{statistics.time | date:'dd/MM/yyyy h:mm:ss a'}}</span>
+        <br/><span style="padding-left: 10px; font-size:10px;"> Escribe el nombre del país en inglés</span>
+        <br/><span style="padding-left: 10px; font-size:10px;"> (Ejemplo: Spain, Russia, Italy, Mexico, Guatemala, Ukraine)</span>
         <form class="form-inline" novalidate>
           <div class="form-group mx-sm-3 mb-2">
             <input  
             class="form-control form-control-sm" 
             type="text" 
-            placeholder="Ingrese nombre pais"
+            placeholder="Ingrese nombre país"
             onClick="this.select();"
             [(ngModel)]="country"
             [ngModelOptions]="{standalone: true}">

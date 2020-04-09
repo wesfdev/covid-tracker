@@ -8,7 +8,8 @@ const {
         getCities,
         saveDiagnostic,
         getDiagnostics,
-        getDiagnosticsByCity
+        getDiagnosticsByCity,
+        getObservations
     } = require('../services/serviceImpl')
 
 
@@ -22,6 +23,7 @@ app.get(`${path}/cities`, async function (req, res) {
     });
 });
 
+
 app.post(`${path}/diagnostic`, async function (req, res) {
     let diagnostic = req.body;
     let response = await saveDiagnostic(diagnostic);
@@ -29,6 +31,16 @@ app.post(`${path}/diagnostic`, async function (req, res) {
         code: 0,
         metadata: {},
         message: "Save diagnostic",
+        body: response
+    });
+});
+
+/*app.get(`${path}/observations`, async function (req, res) {
+    let response = await getObservations()
+    return res.status(200).json({
+        code: 0,
+        metadata: {},
+        message: "get observations",
         body: response
     });
 });
@@ -51,7 +63,7 @@ app.get(`${path}/city-diagnostic`, async function (req, res) {
         message: "get diagnostics by city",
         body: response
     });
-});
+});*/
 
 
 module.exports = app;

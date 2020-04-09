@@ -1,19 +1,18 @@
-    <section id="symptom" class="resource section-bg">
+    <section  class="resource section-bg">
       <div class="container">
         <div class="row">
           <div class="image-symptom col-xl-5 d-flex align-items-stretch justify-content-center justify-content-lg-start"></div>
           <div class="col-xl-7 pl-0 pl-lg-5 pr-lg-1 d-flex align-items-stretch">
-            <div class="content d-flex flex-column justify-content-center">
+            <div id="symptom"  class="content d-flex flex-column justify-content-center">
               <h3 data-aos="fade-in" data-aos-delay="100">Seguimiento de síntomas</h3>
               <p data-aos="fade-in">
                   Si usted sospecha ser un paciente de COVID-19 positivo por algun sintoma o conoce a alguien, este sistema
-                  le permitira llevar un historico de su enfermedad y saber su estado actual, en donde se le pondra
-                  en contacto con un médico. 
+                  le permitira realizar una evaluación para comprobar su estado actual. 
               </p>
               <div class="row">
                 <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="100" >
-                  <i class="bx bx-images" (click)="openDiagnostic()"></i>
-                  <h4 (click)="openDiagnostic()"><a >Iniciar diagnotico</a></h4>
+                  <i class="bx bx-plus-medical" (click)="openDiagnostic()"></i>
+                  <h4 (click)="openDiagnostic()"><a >Iniciar diagnóstico</a></h4>
                   <p></p>
                 </div>
                 <!--div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="150">
@@ -22,44 +21,68 @@
                   <p></p>
                 </div-->
                 <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="150" >
-                  <i class="bx bx-images"></i>
-                  <h4><a>Infórmate</a></h4>
+                  <i class="bx bx-info-circle"></i>
+                  <h4><a>Infórmate en los siguientes enlaces:</a></h4>
                   <br>
                 </div>
 
 
-                <div><!--  *ngIf="showPDF" -->
+
+                <div class="container-fluid"><!--  *ngIf="showPDF" -->
                   <form class="form-inline" *ngFor="let pdf of listPDF">
-                    <button type="submit" class="btn" (click)="setPDF(pdf,'download')"><i class='bx bxs-cloud-download' ></i></button>
-                    <button type="submit" class="btn" (click)="setPDF(pdf,'view')"><i class='bx bx-show-alt' ></i></button>
-                    <label>{{pdf.name}}</label>                    
+                    <button type="button" class="btn" (click)="setPDF(pdf,'view')"><i class='bx bx-show-alt' ></i></button>
+                    <label (click)="setPDF(pdf,'view')">{{pdf.name}}</label>                    
                   </form>            
                 </div>
 
-                <div>
+                <div class="container-fluid">
                   <br>
-                  <span><strong>Ya que viste el video y leiste los archivos, te gutaría hacer un pequeño test sobre el coronavirus?  &nbsp; </strong></span>
+                  <span style="padding-left: 7px;"><strong>Ya que viste el video y leiste los archivos, te gustaría hacer un pequeño test sobre el coronavirus?  &nbsp; </strong></span>
                     <a style="font-size: 30px;" href="https://www.unicef.org/es/coronavirus/datos-o-ficcion-cuanto-sabes-acerca-de-coronavirus-covid-19" target="_blank">
                       <i class='bx bxs-pencil'> </i>
                     </a>
                 </div>                
+                
+                <!-- Modal -->
+                <div class="modal fade" id="modalPDF" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Vista de documento</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-footer">
+                        <!--button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button-->
+                        <button type="button" class="btn btn-sm btn-primary" (click)="setPDF(pdfSrc,'download')"><i class='bx bxs-cloud-download' ></i> Descargar</button>                        
+                      </div>                      
+                      <div class="modal-body">
+                        Espere mientras se visualiza el documento.
+                        También lo puede descargar en la parte de arriba.
+                        <div *ngIf="viewFile">
+                          <pdf-viewer [src]="pdfSrc" 
+                          [render-text]="true"
+                          style="display: block;"
+                          [original-size]="false"
+                          [show-all]="true"
+                          >
+                          
+                        </pdf-viewer>                    
+                      </div>
 
-                <div class="video">
-                  <video controls (click)="toggleVideo()" #videoPlayer style="width:420px;height:315px;">
-                      <source src="{{videoSource}}" type="video/mp4" />
-                      Browser not supported
-                  </video>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
 
+                <div class="video">
+                  <video controls  style="width:420px;height:315px;">
+                      <source src="{{videoSource}}" type="video/mp4" />
+                  </video>
+                </div>
 
-                  <div *ngIf="viewFile">
-                      <pdf-viewer [src]="pdfSrc" 
-                      [render-text]="true"
-                      style="display: block;"
-                      [original-size]="false">
-                    </pdf-viewer>                    
-                  </div>
                 
               </div>
             </div>
@@ -200,7 +223,7 @@
               
               
                     <div id="test-l-3" class="content">
-                      
+
                       <div  *ngFor="let cat of listSymptoms | keyvalue">
                         <!-- TIPO (enfermedad, sintoma, etc)-->
                         <br><br>
@@ -224,35 +247,35 @@
                     </div>
 
                     <div id="test-l-4" class="content">
-                      <span style="font-size: 12px;"><strong>Probabilidad de contagio: </strong>{{result.probability[0].weighing}}%</span> 
+                      <div *ngIf="type =='A'" style="background-color: rgba(0, 177, 106, 1); padding: 10px;"></div>
+                      <div *ngIf="type =='B'" style="background-color: rgba(244, 208, 63, 1); padding: 10px;"></div>
+                      <div *ngIf="type =='C'" style="background-color: rgba(192, 57, 43, 1); padding: 10px;"></div>                      
+
+                      <!--span style="font-size: 12px;"><strong>Probabilidad de contagio: </strong>{{result.probability[0].weighing}}%</span> 
                       <br>   
-                      <span style="font-size: 12px;"><strong>Resumen:</strong></span>
+                      <span style="font-size: 12px;"><strong>Token de acceso: </strong>{{result.token}}</span>                                                                         
+                      <br-->                      
+
                       <br>
                       <div>
-                        <ul>
-                          <li *ngFor="let r of result.observationsSyntom">{{r.description}}</li>
-                        </ul>
+                        <div  *ngFor="let cat of result.resumenProbability | keyvalue">
+                          <span style="font-size: 12px;"><strong>{{ getString(cat.key) }}:</strong></span>
+                          <ul>
+                            <li *ngFor="let r of cat.value">{{r.description}}</li>
+                          </ul>                          
+                        </div>
                       </div> 
                       <br>
-                      <span style="font-size: 12px;"><strong>Observaciones:</strong></span>
 
-                      <br>
                       <div>
-                        <ul>
-                          <li *ngFor="let r of result.observationsConditional">{{r.description}}</li>
-                        </ul>
-                      </div>  
-                      <br>
-                        <span style="font-size: 12px;"><strong>Recomendaciones:</strong></span>
-                      <br>
-                      <div>
-                        <ul>
-                          <li *ngFor="let r of result.observationsDisease">{{r.description}}</li>
-                        </ul>
-                      </div>                        
+                        <div  *ngFor="let cat of result.observations | keyvalue">
+                          <span style="font-size: 12px;"><strong>{{ getString(cat.key) }}:</strong></span>
+                          <ul>
+                            <li *ngFor="let r of cat.value">{{r.description}}</li>
+                          </ul>                          
+                        </div>
+                      </div>                       
 
-                      <br>
-                      <span style="font-size: 12px;"><strong>Token de acceso: </strong>{{result.token}}</span>                                                   
                     </div>
 
                   </form>

@@ -9,11 +9,13 @@ import { RestService } from '../services/rest.service';
 export class StatisticsComponent implements OnInit {
   public statistics:any = { cases: { }, deaths:{} };
   public historyList:any = [];
-  public country:string = 'Guatemala';
+  public country:string = '';
   public url:string = '';
   public headers:any = null;
 
   constructor(public api: RestService) { 
+    let storageCountry = localStorage.getItem('country');
+    this.country = storageCountry?storageCountry:'Guatemala';
     this.url = this.api.getEndpointCovid();
     this.headers = this.api.getHeaderCovid();
     this.getStatisticsByCountry(this.country);
@@ -35,6 +37,7 @@ export class StatisticsComponent implements OnInit {
   }
 
   public search(){
+      localStorage.setItem('country', this.country);    
       this.getStatisticsByCountry(this.country);
   }
 

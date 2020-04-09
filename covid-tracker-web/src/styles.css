@@ -1,6 +1,14 @@
 @import '~bs-stepper/dist/css/bs-stepper.min.css';
 @import "~@ng-select/ng-select/themes/default.theme.css";
 
+/*
+@import '~ngx-toastr/toastr'; 
+@import '~ngx-toastr/toastr-bs4-alert';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+@import '~ngx-toastr/toastr-bs4-alert';
+*/
 .image-symptom {
     background: url("assets/images/patient.svg") center center no-repeat;
     background-size: cover;

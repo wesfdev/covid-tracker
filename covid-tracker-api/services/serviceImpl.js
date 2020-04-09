@@ -25,33 +25,69 @@ let saveDiagnostic = async (request) => {
     let diagnostic = request.diagnostic;
     let detail = request.detail;
     let token = uuid.v4();
+    let statusActive = 4;
 
     let sqlPerson = `INSERT INTO covid_tracker.person (name, age, gender) VALUES(?,?,?);`;
     let sqlDiagnostic = `INSERT INTO covid_tracker.diagnostic(person, city, status, token, creation_date) VALUES(?,?,?,?,?);`;
     let sqlCondition = `INSERT INTO covid_tracker.patient_condition(diagnostic, type_job, type_contact_work, risk_area, positive_person_contact) VALUES(?, ?, ?, ?, ?)`;
     let sqlDiagnosticDet = `INSERT INTO covid_tracker.diagnostic_detail(diagnostic, symptom_response) VALUES(?, ?)`;
 
+    try {
+        let resultPerson  = await insert(sqlPerson,[diagnostic.name,  diagnostic.age, diagnostic.gender.dbid]);
+        let resultDiagnostic  = await insert(sqlDiagnostic, [resultPerson.insertId, diagnostic.city, statusActive, token, showTime()]);
+        await insert(sqlCondition, [resultDiagnostic.insertId, diagnostic.typeJob.dbid, diagnostic.typeContact.dbid, diagnostic.riskArea, diagnostic.typeContactWork]);
+    
+        for(let i = 0; i < detail.length; i++){
+            await insert(sqlDiagnosticDet, [ resultDiagnostic.insertId, detail[i].dbid ]);
+        }
+    
+        let probability = await virusProbability(resultDiagnostic.insertId);
+        let condition = getCondition(diagnostic, probability[0].weighing);
+        let resumen = await resumenByProbability(probability[0].weighing);
+        let resumenProbability = getRiskObservation(resumen, condition.risk);
+        let observations = await getObservations();
+        let type = getType(condition.percent);
 
-    let resultPerson  = await insert(sqlPerson,[diagnostic.name,  diagnostic.age, diagnostic.gender.dbid]);
-    let resultDiagnostic  = await insert(sqlDiagnostic, [resultPerson.insertId, diagnostic.city, 1, token, showTime()]);
-    await insert(sqlCondition, [resultDiagnostic.insertId, diagnostic.typeJob.dbid, diagnostic.typeContact.dbid, diagnostic.riskArea, diagnostic.typeContactWork]);
-
-    for(let i = 0; i < detail.length; i++){
-        await insert(sqlDiagnosticDet, [ resultDiagnostic.insertId, detail[i].dbid ]);
+        return { 
+            token,
+            diagnostic: resultDiagnostic.insertId,
+            type,
+            resumenProbability,
+            observations
+        };        
+    } catch (error) {
+        console.log('Error persist saveDiagnostic', error)
+        return new Error(`Error persist : ${error.message}`)
     }
 
-    let probability = await virusProbability(resultDiagnostic.insertId);
-    let observationsSyntom = await recommendationBySyntom(probability[0].weighing);
-
-    return { 
-        token,
-        diagnostic: resultDiagnostic.insertId,
-        probability,
-        observationsSyntom
-
-    };
 }
 
+let getType = (percent) => {
+    if(percent >= 0 && percent <= 6){
+        return 'A';
+    }else if(percent >= 7 && percent <= 12){
+        return 'B';
+    }else{
+        return 'C';
+    }
+}
+
+let getCondition = (diagnostic, percent) =>{
+    let risk = 0;
+
+    if(diagnostic.riskArea > 0){
+        risk+=4;
+    }
+
+    if(diagnostic.typeContactWork > 0){
+        risk+=5;
+    }    
+
+    return {
+        percent: percent + risk,
+        risk: risk
+    };
+}
 
 let virusProbability = async (diagnostic) =>{
     let sql =`
@@ -64,16 +100,61 @@ let virusProbability = async (diagnostic) =>{
     return rows;
 }
 
-let recommendationBySyntom = async (percent) =>{
+let resumenByProbability = async (percent) =>{
     let sql = `
-    select o.*, cat.description as categoryName from covid_tracker.observations o 
-    inner join covid_tracker.value_list cat on cat.dbid = o.category
-    where cat.name in('principal_symptom','other_symptom')
-    and ? BETWEEN o.initial_probability and o.final_probability_range`;
+    select cat.description as categoryName, o.dbid, o.description
+        from covid_tracker.observations o 
+        inner join covid_tracker.value_list cat on cat.dbid = o.category
+        inner join covid_tracker.value_list sts on sts.dbid = o.status    
+        where cat.name in('resumen','forms_communication')
+        and ? BETWEEN o.initial_probability and o.final_probability_range
+        and sts.name = 'active' ;
+    `;
     let db = connection.promise();
     let [ rows ]  = await db.execute(sql,[percent]);
-    return rows;    
+    let groups = _.chain(rows)
+    .groupBy('categoryName')
+    .value();
+
+    return groups;    
 }
+
+let getRiskObservation = (array, value) =>{
+
+    if(value > 0){
+        let type = '0.Condiciones de riesgo';
+        array[type] = [
+            {
+                dbid:1,                
+                categoryName:type,
+                description: 'Debido a las condiciones de riesgo a las que ha sido expuesto, se le recomienda que informe a su médico de su sospecha de tener COVID-19, si se le aconseja ir a un centro de emergencia o los centro establecidos, por favor utilice mascarilla para minimizar la probabilidad de contagiar a otros.'
+            }
+        ];
+        return array;
+    }
+    return array;
+}
+
+let getObservations = async () =>{
+    let sql = `
+        select cat.dbid categoryDbid, cat.name as categoryname, 
+        cat.description as categoryDescription, o.description
+        from covid_tracker.observations o
+        inner join covid_tracker.value_list cat on cat.dbid = o.category
+        inner join covid_tracker.value_list sts on sts.dbid = o.status
+        where cat.name not in('resumen','forms_communication')
+    and sts.name = 'active';
+    `;
+    let db = connection.promise();
+    let [ rows ]  = await db.execute(sql);
+
+    let groups = _.chain(rows)
+    .groupBy('categoryDescription')
+    .value();
+
+    return groups;      
+}
+
 
 let getDiagnostics = async()=>{
     let sql = `
@@ -119,5 +200,6 @@ module.exports = {
     getCities,
     saveDiagnostic,
     getDiagnostics,
-    getDiagnosticsByCity
+    getDiagnosticsByCity,
+    getObservations
 }
