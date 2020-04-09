@@ -11,10 +11,10 @@ COVID Tracker is a tool that allows informing the public about the COVID-19 issu
 + [Node JS](https://nodejs.org/es/docs/)
 + [Axios](https://github.com/axios/axios#axios)
 + [Express](https://expressjs.com/es/)
-+ [Maps JavaScript API](https://developers.google.com/maps/documentation/javascript/tutorial)
++ [Google Maps API](https://developers.google.com/maps/documentation/javascript/tutorial)
 + [IDE (VSCode)](https://code.visualstudio.com/docs)
 + [Angular](https://angular.io/)
-
++ [MYSQL](https://www.mysql.com/)
 
 # Run 
 
@@ -28,10 +28,11 @@ COVID Tracker is a tool that allows informing the public about the COVID-19 issu
 + Move your terminal to where your files live: `covid-tracker-web`
 + Execute: `npm install`
 + Start the server: `ng serve `
-+ Open [localhost:4200](localhost:4200) in a browser or 127.0.0.1:4200 .
++ Open [localhost:4200](localhost:4200).
 
+## Google Maps Key
++ In file index.html from covid-tracker-web add your key to api google maps.
 
 ## DataBase
 + Execute SQL in directory `scripts`:
-	+  `covid_tracker_dump.sql` or 
-	+ `covid_tracker_dump_data.sql` 
+	+  `covid_tracker_dump.sql`
