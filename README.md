@@ -1,13 +1,14 @@
 # COVID Tracker
+
+[View Video Demo](https://youtu.be/IxnsPOrmQqA)
+
+[View Web Site](http://www.covid-gt.com/covid-tracker-web/#/)
+
 ## Application
 The goal is to offer alternatives to some of the challenges posed by the coronavirus crisis using technology.
 
 ## Application Features
 COVID Tracker is a tool that allows informing the public about the COVID-19 issue and taking precautions, as well as generating online diagnostics to calculate the probability of contagion of a person. It also allows analysis and statistics of the information collected for decision making.
-
-[View Video Demo](https://youtu.be/IxnsPOrmQqA)
-
-[View Web Site](http://www.covid-gt.com/covid-tracker-web/#/)
 
 
 ## Tools:
