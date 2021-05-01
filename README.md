@@ -1,6 +1,6 @@
 # COVID Tracker
 
-[View Video Demo](https://youtu.be/IxnsPOrmQqA)
+## [View Video Demo](https://youtu.be/IxnsPOrmQqA)
 
 ## Application
 The goal is to offer alternatives to some of the challenges posed by the coronavirus crisis using technology.
